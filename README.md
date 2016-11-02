@@ -41,6 +41,8 @@ For support using Chart.js, please post questions with the [`chartjs` tag on Sta
 
 To build, run `gulp build`.
 
+To almond build, run `gulp almondBuild`.
+
 To test, run `gulp test`.
 
 To test against code standards, run `gulp lint`.
