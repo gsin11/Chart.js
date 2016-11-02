@@ -44,6 +44,7 @@ var testFiles = [
 
 gulp.task('bower', bowerTask);
 gulp.task('build', buildTask);
+gulp.task('almondBuild', almondTask);
 gulp.task('package', packageTask);
 gulp.task('coverage', coverageTask);
 gulp.task('watch', watchTask);
@@ -105,6 +106,31 @@ function buildTask() {
     .pipe(insert.prepend(header))
     .pipe(streamify(replace('{{ version }}', package.version)))
     .pipe(streamify(concat('Chart.min.js')))
+    .pipe(gulp.dest(outDir));
+
+  return merge(bundled, nonBundled);
+
+}
+
+function almondTask() {
+
+  var bundled = browserify('./src/chart.js', { standalone: 'Chart' })
+    .plugin(collapse)
+    .bundle()
+    .pipe(source('Chart.bundle.js'))
+    .pipe(insert.prepend(header))
+    .pipe(streamify(replace('{{ version }}', package.version)))
+    .pipe(streamify(replace('else if(typeof define==="function"&&define.amd){define([],f)}', '')))
+    .pipe(gulp.dest(outDir));
+
+  var nonBundled = browserify('./src/chart.js', { standalone: 'Chart' })
+    .ignore('moment')
+    .plugin(collapse)
+    .bundle()
+    .pipe(source('Chart.js'))
+    .pipe(insert.prepend(header))
+    .pipe(streamify(replace('{{ version }}', package.version)))
+    .pipe(streamify(replace('else if(typeof define==="function"&&define.amd){define([],f)}', '')))
     .pipe(gulp.dest(outDir));
 
   return merge(bundled, nonBundled);
