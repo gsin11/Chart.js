@@ -10,15 +10,15 @@
 
 You can download the latest version of Chart.js from the [GitHub releases](https://github.com/chartjs/Chart.js/releases/latest) or use a [Chart.js CDN](https://cdnjs.com/libraries/Chart.js).
 
-To install via npm:
+To install:
 
 ```bash
-npm install chart.js --save
+npm install https://github.com/gsin11/Chart.js.git --save
 ```
 
 To install via bower:
 ```bash
-bower install chart.js --save
+bower install https://github.com/gsin11/Chart.js.git --save
 ```
 
 #### Selecting the Correct Build
