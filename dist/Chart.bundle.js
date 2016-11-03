@@ -11013,6 +11013,7 @@ module.exports = function(Chart) {
 		labels: {
 			boxWidth: 40,
 			padding: 10,
+			boxHeight: 20,
 			// Generates labels shown in the legend
 			// Valid properties to return:
 			// text : text to display
@@ -11057,7 +11058,19 @@ module.exports = function(Chart) {
 		return labelOpts.usePointStyle ?
 			fontSize * Math.SQRT2 :
 			labelOpts.boxWidth;
-	}
+	};
+
+		/**
+	 * Helper function to get the box height based on the usePointStyle option
+	 * @param labelopts {Object} the label options on the legend
+	 * @param fontSize {Number} the label font size
+	 * @return {Number} width of the color box area
+	 */
+	function getBoxHeight(labelOpts, fontSize) {
+		return labelOpts.usePointStyle ?
+			fontSize * Math.SQRT2 :
+			labelOpts.boxHeight;
+  };
 
 	Chart.Legend = Chart.Element.extend({
 
@@ -11299,11 +11312,12 @@ module.exports = function(Chart) {
 				ctx.font = labelFont;
 
 				var boxWidth = getBoxWidth(labelOpts, fontSize),
+					boxHeight = getBoxHeight(labelOpts, fontSize),
 					hitboxes = me.legendHitBoxes;
 
 				// current position
 				var drawLegendBox = function(x, y, legendItem) {
-					if (isNaN(boxWidth) || boxWidth <= 0) {
+					if (isNaN(boxWidth) || boxWidth <= 0 || isNaN(boxHeight) || boxHeight <= 0) {
 						return;
 					}
 
@@ -11336,9 +11350,9 @@ module.exports = function(Chart) {
 					} else {
 						// Draw box as legend symbol
 						if (!isLineWidthZero) {
-							ctx.strokeRect(x, y, boxWidth, fontSize);
+							ctx.strokeRect(x, y, boxWidth, boxHeight);
 						}
-						ctx.fillRect(x, y, boxWidth, fontSize);
+						ctx.fillRect(x, y, boxWidth, boxHeight);
 					}
 
 					ctx.restore();
@@ -11372,7 +11386,7 @@ module.exports = function(Chart) {
 					};
 				}
 
-				var itemHeight = fontSize + labelOpts.padding;
+				var itemHeight = boxHeight + labelOpts.padding;
 				helpers.each(me.legendItems, function(legendItem, i) {
 					var textWidth = ctx.measureText(legendItem.text).width,
 						width = boxWidth + (fontSize / 2) + textWidth,
